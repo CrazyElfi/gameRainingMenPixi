@@ -16,22 +16,21 @@ let person = new Graphics()
 person.beginFill(0xffffff)
 person.drawRect(0, 0, 70, 70)
 person.endFill()
-person.x = 0
+person.x = 10
 person.y = 500
 person.count = 0
 app.stage.addChild(person)
 
-let score = person.count;
+let score = person.count
 
 const style = new PIXI.TextStyle({
-  fill: "#ffffff",
-  fontFamily: "Georgia, serif"
-});
-let text = new PIXI.Text(`Score: ${score}`, style);
-text.x = 0;
-text.y = 20;
+  fill: '#ffffff',
+  fontFamily: 'Georgia, serif',
+})
+let text = new PIXI.Text(`Score: ${score}`, style)
+text.x = 0
+text.y = 20
 console.log(text)
-
 
 let fallingSquare = new Graphics()
 fallingSquare.beginFill(0xB23AD4)
@@ -41,7 +40,6 @@ fallingSquare.x = 0
 fallingSquare.y = 0
 fallingSquare.id = generateUniqueId()
 fallingSquare.speadY = 10
-
 
 app.stage.addChild(fallingSquare)
 app.stage.addChild(text)
@@ -58,55 +56,54 @@ setInterval(() => {
 
 function movePerson () {
   document.addEventListener('keydown', function (event) {
-    if (event.keyCode === 37) {
+    if (event.key === 'ArrowLeft' && person.x > 0) {
       person.x -= step
     }
-    if (event.keyCode === 39) {
+    if (event.key === 'ArrowRight' && (person.x + person.width) < app.screen.width) {
       person.x += step
     }
-    // if(person.x === 0 || person.x === app.view.width) {
-    //   console.log('no way')
-    //   return;
-    // }
   })
 
 }
+
 movePerson()
 
 function boundsObj (obj1, obj2) {
-  let topLeft = obj1.x;
-  let topRight = obj1.x + obj1.width;
-  let bottomLeft = obj1.y;
-  let bottomRight = obj1.y +obj1.height;
+  let topLeft = obj1.x
+  let topRight = obj1.x + obj1.width
+  let bottomLeft = obj1.y
+  let bottomRight = obj1.y + obj1.height
 
-  let othTopLeft = obj2.x;
-  let othTopRight = obj2.x + (obj2.width);
-  let othBottomLeft = obj2.y;
-  let othBottomRight = obj2.y + (obj2.height);
+  let othTopLeft = obj2.x
+  let othTopRight = obj2.x + (obj2.width)
+  let othBottomLeft = obj2.y
+  let othBottomRight = obj2.y + (obj2.height)
 
-  let crash = true;
+  let crash = true
   if ((bottomRight < othBottomLeft)
     || (bottomLeft > othBottomRight)
     || (topRight < othTopLeft)
     || (topLeft > othTopRight)) {
-    crash = false;
+    crash = false
   }
-  return crash;
+  return crash
 }
 
 function crashSquares (person, fallingSquare) {
-    if (boundsObj(person, fallingSquare)) {
-      removeFallingSquares(fallingSquare)
-      person.count += 1
-      console.log('score', person.count)
-      changeScore (person.count)
-    }
+  if (boundsObj(person, fallingSquare)) {
+    removeFallingSquares(fallingSquare)
+    person.count += 1
+    console.log('score', person.count)
+    changeScore(person.count)
+  }
 }
 
-setInterval(() => {crashSquares (person, fallingSquare)}, 1000)
+setInterval(() => {
+  crashSquares(person, fallingSquare)
+}, 1000)
 
 function removeFallingSquares (obj) {
-  obj.visible = false;
+  obj.visible = false
   console.log('1', app.stage.children)
   app.stage.removeChild(obj)
 }
@@ -121,3 +118,27 @@ function generateUniqueId () {
 function changeScore (count) {
   text.text = `Score: ${count}`
 }
+
+function generateNewObj () {
+  let newFallingObj = new Graphics()
+  let randomColor = `0x${Math.floor(Math.random() * 16777215).toString(16)}`
+  newFallingObj.beginFill(`0x${Math.floor(Math.random() * 16777215).toString(16)}`)
+  newFallingObj.drawRect(0, 0, 50, 50)
+  newFallingObj.endFill()
+
+  let min = 0
+  let maxX = 900
+
+  newFallingObj.x = (Math.random() * (maxX - min) + min).toFixed(0)
+  console.log(newFallingObj.x)
+  newFallingObj.y = min
+
+  newFallingObj.id = generateUniqueId()
+  newFallingObj.speadY = 10
+  app.stage.addChild(newFallingObj)
+
+  return newFallingObj
+}
+
+
+
